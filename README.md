@@ -39,6 +39,23 @@ source venv/bin/activate   # en Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+### Instalación en Termux (Android)
+
+`cryptography`, `pillow` y `numpy` tienen partes en C/Rust que no compilan
+bien con pip dentro de Termux. Usa los paquetes precompilados de Termux en
+vez de dejar que pip los compile desde cero:
+
+```bash
+pkg update
+pkg install python-cryptography python-pillow python-numpy -y
+pip install flask
+python app.py
+```
+
+No uses `venv` en Termux salvo que lo crees con
+`python3 -m venv --system-site-packages venv`, porque si no, no vera los
+paquetes que instaló `pkg`.
+
 ## Uso
 
 ```bash

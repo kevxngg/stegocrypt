@@ -7,7 +7,7 @@ Uso:
     Abrir http://127.0.0.1:5000
 """
 
-from flask import Flask, render_template, request, send_file, flash, redirect, url_for
+from flask import Flask, render_template, request, send_file, flash
 from PIL import Image
 import io
 
@@ -32,20 +32,20 @@ def encrypt():
 
     if not file or file.filename == "":
         flash("Selecciona una imagen.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_encrypt_view=True)
     if not message:
         flash("Escribe un mensaje.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_encrypt_view=True)
     if not password:
         flash("Escribe una contraseña.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_encrypt_view=True)
 
     try:
         image = Image.open(file.stream)
         image.load()
     except Exception:
         flash("El archivo no es una imagen válida.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_encrypt_view=True)
 
     payload = crypto_utils.encrypt_message(message, password)
 
@@ -53,7 +53,7 @@ def encrypt():
         stego_image = stego_utils.embed_payload(image, payload)
     except ValueError as e:
         flash(str(e))
-        return redirect(url_for("index"))
+        return render_template("index.html", force_encrypt_view=True)
 
     png_bytes = stego_utils.image_to_png_bytes(stego_image)
 
@@ -72,26 +72,26 @@ def decrypt():
 
     if not file or file.filename == "":
         flash("Selecciona una imagen.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_decrypt_view=True)
     if not password:
         flash("Escribe la contraseña.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_decrypt_view=True)
 
     try:
         image = Image.open(file.stream)
         image.load()
     except Exception:
         flash("El archivo no es una imagen válida.")
-        return redirect(url_for("index"))
+        return render_template("index.html", force_decrypt_view=True)
 
     try:
         payload = stego_utils.extract_payload(image)
         message = crypto_utils.decrypt_message(payload, password)
     except ValueError as e:
         flash(str(e))
-        return redirect(url_for("index"))
+        return render_template("index.html", force_decrypt_view=True)
 
-    return render_template("index.html", revealed_message=message)
+    return render_template("index.html", revealed_message=message, force_decrypt_view=True)
 
 
 if __name__ == "__main__":
