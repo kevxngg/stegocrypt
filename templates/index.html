@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>StegoCrypt</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; background:#0f1115; color:#e6e6e6; }
+  h1 { font-size: 1.4rem; }
+  .card { background:#181b22; border:1px solid #2a2e38; border-radius:10px; padding:20px; margin-bottom:20px; }
+  label { display:block; margin-top:12px; margin-bottom:4px; font-size:0.9rem; color:#a9adba; }
+  input[type=text], input[type=password], textarea, input[type=file] {
+    width:100%; box-sizing:border-box; padding:8px; border-radius:6px;
+    border:1px solid #2a2e38; background:#0f1115; color:#e6e6e6;
+  }
+  textarea { min-height:70px; resize:vertical; }
+  button {
+    margin-top:16px; padding:10px 16px; border:none; border-radius:6px;
+    background:#4c7dff; color:white; font-weight:600; cursor:pointer;
+  }
+  button:hover { background:#3a63d6; }
+  .flash { background:#5a2626; border:1px solid #a04343; padding:10px; border-radius:6px; margin-bottom:16px; }
+  .revealed { background:#1e3a26; border:1px solid #3a8a4c; padding:14px; border-radius:6px; margin-bottom:16px; word-break: break-word; }
+  .note { font-size:0.8rem; color:#7a7f8c; margin-top:6px; }
+</style>
+</head>
+<body>
+  <h1>🔒 StegoCrypt — mensajes ocultos en imágenes</h1>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for m in messages %}
+        <div class="flash">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if revealed_message %}
+    <div class="revealed"><strong>Mensaje revelado:</strong><br>{{ revealed_message }}</div>
+  {% endif %}
+
+  <div class="card">
+    <h2>Ocultar mensaje</h2>
+    <form action="/encrypt" method="post" enctype="multipart/form-data">
+      <label>Imagen (máx 50MB)</label>
+      <input type="file" name="image" accept="image/*" required>
+
+      <label>Mensaje</label>
+      <textarea name="message" required></textarea>
+
+      <label>Contraseña</label>
+      <input type="password" name="password" required>
+
+      <button type="submit">Cifrar y ocultar → descargar PNG</button>
+      <div class="note">La imagen resultante se descarga como PNG sin ningún metadato (EXIF, GPS, dispositivo, etc). Guárdala así; si la conviertes a JPG se pierde el mensaje.</div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>Revelar mensaje</h2>
+    <form action="/decrypt" method="post" enctype="multipart/form-data">
+      <label>Imagen con mensaje oculto</label>
+      <input type="file" name="image" accept="image/*" required>
+
+      <label>Contraseña</label>
+      <input type="password" name="password" required>
+
+      <button type="submit">Descifrar</button>
+    </form>
+  </div>
+</body>
+</html>
