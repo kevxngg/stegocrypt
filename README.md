@@ -75,6 +75,8 @@ No uses `venv` en Termux salvo que lo crees con
 `python3 -m venv --system-site-packages venv`, porque si no, no verá los
 paquetes que instaló `pkg`.
 
+Atajo: `bash termux_setup.sh` corre estos mismos pasos automáticamente.
+
 ## Actualizar a la última versión
 
 ```bash
@@ -119,7 +121,14 @@ stegocrypt/
 ├── app.py               # servidor Flask local
 ├── crypto_utils.py      # cifrado AES-256-GCM + derivación Scrypt
 ├── stego_utils.py        # esteganografía LSB (numpy) + limpieza de metadatos
+├── cli.py                # versión de línea de comandos (encrypt/decrypt/info)
 ├── templates/index.html  # interfaz web (apartados Cifrar / Descifrar)
+├── termux_setup.sh        # instalación automática en Termux (Android)
 ├── requirements.txt
+├── LICENSE                # MIT
 └── README.md
 ```
+
+## Licencia
+
+MIT — ver [LICENSE](LICENSE).

@@ -1,11 +1,16 @@
 from flask import Flask, render_template, request, send_file, flash, jsonify
 from PIL import Image
 import io
+import os
 import crypto_utils
 import stego_utils
 
 app = Flask(__name__)
-app.secret_key = "stegocrypt-local-only-key"
+# Se genera al arrancar en vez de estar fijo en el código: como el repo es
+# público, cualquiera que clone StegoCrypt vería (y compartiría) la misma
+# llave si estuviera hardcodeada aquí. Solo firma la cookie de sesión local
+# que usan los mensajes flash — no necesita sobrevivir a un reinicio.
+app.secret_key = os.urandom(24)
 app.config["MAX_CONTENT_LENGTH"] = 50 * 1024 * 1024
 
 @app.route("/", methods=["GET"])
