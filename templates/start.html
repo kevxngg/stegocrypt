@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}StegoCrypt{% endblock %}
+{% block content %}
+
+<div class="eyebrow">Esteganografía + cifrado local</div>
+<div class="page-title">Ocultar un mensaje en una imagen</div>
+<div class="page-lede">El mensaje se cifra con tu contraseña y se guarda dentro de los píxeles de la foto. Nada sale de este servidor local.</div>
+
+<div class="menu-grid">
+  <a class="menu-card" href="{{ url_for('encrypt_page') }}">
+    <span class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="11" width="16" height="9" rx="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </span>
+    <h2>Cifrar</h2>
+    <p>Esconder un mensaje dentro de una imagen</p>
+  </a>
+  <a class="menu-card" href="{{ url_for('decrypt_page') }}">
+    <span class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="11" width="16" height="9" rx="2"></rect>
+        <path d="M7 11V9a5 5 0 0 1 9.9-1"></path>
+      </svg>
+    </span>
+    <h2>Descifrar</h2>
+    <p>Revelar el mensaje oculto en una imagen</p>
+  </a>
+</div>
+
+<div class="compat">
+  <div class="compat-header" id="compat-header" onclick="toggleCompat()" aria-expanded="false">
+    <span>Compatibilidad con plataformas</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+  </div>
+  <div class="compat-body" id="compat-body">
+    <table class="compat-table">
+      <tr><th>Plataforma</th><th>Soporte</th><th>Cómo compartir</th></tr>
+      <tr><td>Email (adjunto)</td><td><span class="tag ok">Compatible</span></td><td>Adjuntar el .png directamente</td></tr>
+      <tr><td>Google Drive / Dropbox</td><td><span class="tag ok">Compatible</span></td><td>Subir y compartir el enlace</td></tr>
+      <tr><td>USB / cable</td><td><span class="tag ok">Compatible</span></td><td>Copiar el archivo</td></tr>
+      <tr><td>Telegram</td><td><span class="tag warn">Depende</span></td><td>Enviar como archivo, no como imagen</td></tr>
+      <tr><td>WhatsApp</td><td><span class="tag bad">No compatible</span></td><td>Recomprime y destruye el mensaje</td></tr>
+      <tr><td>Instagram / Facebook</td><td><span class="tag bad">No compatible</span></td><td>Recomprime y destruye el mensaje</td></tr>
+      <tr><td>iMessage (foto)</td><td><span class="tag bad">No compatible</span></td><td>Recomprime y destruye el mensaje</td></tr>
+    </table>
+    <div class="compat-note">
+      Regla general: si la plataforma reencuadra o recomprime la foto, el mensaje se pierde. Comparte siempre el .png como archivo, no como imagen.
+    </div>
+  </div>
+</div>
+
+{% endblock %}
