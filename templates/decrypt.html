@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}StegoCrypt — Descifrar{% endblock %}
+{% block content %}
+
+<a class="back-link" href="{{ url_for('start') }}">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+  Volver
+</a>
+
+{% if revealed_message %}
+<div class="revealed-card">
+  <h3>Mensaje revelado</h3>
+  <div class="revealed-msg" id="revealed-text">{{ revealed_message }}</div>
+  <button class="copy-btn" onclick="copyRevealed()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    Copiar
+  </button>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="eyebrow">Descifrar</div>
+  <div class="page-title" style="margin-bottom:18px">Revelar un mensaje</div>
+
+  <form id="form-decrypt" action="{{ url_for('decrypt_submit') }}" method="post" enctype="multipart/form-data" onsubmit="showSpinner('Extrayendo y descifrando...')">
+
+    <div class="drop-zone" id="dz-dec" ondragover="dzDrag(event,'dz-dec')" ondragleave="dzLeave('dz-dec')" ondrop="dzDrop(event,'dz-dec','dec-file','dec')">
+      <input type="file" name="image" id="dec-file" accept="image/*" onchange="handleFile('dec')">
+      <span class="dz-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+      </span>
+      <div class="dz-text">Selecciona el PNG con el mensaje oculto</div>
+    </div>
+
+    <div class="preview-area" id="dec-preview">
+      <img class="preview-thumb" id="dec-thumb" src="" alt="">
+      <div class="preview-info">
+        <div class="preview-name" id="dec-fname"></div>
+        <div class="preview-meta mono" id="dec-meta"></div>
+      </div>
+    </div>
+
+    <label for="dec-pw">Contraseña</label>
+    <input type="password" name="password" id="dec-pw" placeholder="La misma contraseña usada al cifrar" oninput="checkPwStrength(this,'dec-strength-bar','dec-strength-lbl')">
+    <div class="pw-strength-bar" id="dec-strength-bar"></div>
+    <div class="pw-strength-label" id="dec-strength-lbl"></div>
+
+    <button type="submit" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M7 11V9a5 5 0 0 1 9.9-1"></path></svg>
+      Descifrar
+    </button>
+  </form>
+</div>
+
+{% endblock %}
