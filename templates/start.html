@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}StegoCrypt{% endblock %}
+{% block content %}
+
+<div class="eyebrow">Cifrado y ocultamiento local</div>
+<h1 class="page-title">Un mensaje dentro<br>de una fotografía</h1>
+<p class="page-lede">
+  Tu mensaje se cifra con una contraseña y se reparte por los píxeles de una
+  imagen. La foto sigue viéndose igual. Todo ocurre en este equipo: nada se
+  sube a ningún servidor.
+</p>
+
+<div class="menu-grid">
+  <a class="menu-card" href="{{ url_for('encrypt_page') }}">
+    <span class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="11" width="16" height="9"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </span>
+    <h2>Ocultar un mensaje</h2>
+    <p>Elige una foto, escribe el texto y descarga el PNG resultante</p>
+  </a>
+
+  <a class="menu-card" href="{{ url_for('decrypt_page') }}">
+    <span class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="11" width="16" height="9"></rect>
+        <path d="M7 11V9a5 5 0 0 1 9.9-1"></path>
+      </svg>
+    </span>
+    <h2>Revelar un mensaje</h2>
+    <p>Recupera el texto escondido en un PNG con tu contraseña</p>
+  </a>
+</div>
+
+<div class="compat">
+  <div class="compat-header" id="compat-header" onclick="toggleCompat()" role="button" tabindex="0" aria-expanded="false">
+    <span>Dónde sobrevive el mensaje</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+  </div>
+  <div class="compat-body" id="compat-body">
+    <table class="compat-table">
+      <tr><th>Plataforma</th><th>Resultado</th><th>Cómo enviarlo</th></tr>
+      <tr><td>Correo (adjunto)</td><td><span class="tag ok">Llega intacto</span></td><td>Adjunta el .png</td></tr>
+      <tr><td>Drive / Dropbox</td><td><span class="tag ok">Llega intacto</span></td><td>Sube el archivo y comparte el enlace</td></tr>
+      <tr><td>USB o cable</td><td><span class="tag ok">Llega intacto</span></td><td>Copia el archivo</td></tr>
+      <tr><td>Telegram</td><td><span class="tag warn">Según el modo</span></td><td>Envíalo como archivo, nunca como foto</td></tr>
+      <tr><td>WhatsApp</td><td><span class="tag bad">Se pierde</span></td><td>Recomprime la imagen</td></tr>
+      <tr><td>Instagram / Facebook</td><td><span class="tag bad">Se pierde</span></td><td>Recomprime la imagen</td></tr>
+      <tr><td>iMessage (como foto)</td><td><span class="tag bad">Se pierde</span></td><td>Recomprime la imagen</td></tr>
+    </table>
+    <p class="compat-note">
+      La regla es una sola: si la plataforma recorta o recomprime la foto,
+      reescribe los píxeles y el mensaje desaparece. Envía siempre el .png
+      como archivo.
+    </p>
+  </div>
+</div>
+
+{% endblock %}

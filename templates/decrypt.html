@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}StegoCrypt — Revelar{% endblock %}
+{% block content %}
+
+<a class="back-link" href="{{ url_for('start') }}">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+  Volver
+</a>
+
+{% if revealed_message %}
+<div class="revealed-card">
+  <h3>Mensaje recuperado</h3>
+  <div class="revealed-msg" id="revealed-text">{{ revealed_message }}</div>
+  <button class="copy-btn" onclick="copyRevealed()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    Copiar
+  </button>
+  <p class="revealed-note">
+    Solo se muestra una vez. Al recargar esta página desaparece.
+  </p>
+</div>
+{% endif %}
+
+<div class="eyebrow">Paso 1 de 1</div>
+<h1 class="page-title">Revelar un mensaje</h1>
+
+<div class="card">
+  <form id="form-decrypt" action="{{ url_for('decrypt_submit') }}" method="post" enctype="multipart/form-data" onsubmit="showSpinner('Extrayendo')">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <div class="drop-zone" id="dz-dec" ondragover="dzDrag(event,'dz-dec')" ondragleave="dzLeave('dz-dec')" ondrop="dzDrop(event,'dz-dec','dec-file','dec')">
+      <input type="file" name="image" id="dec-file" accept="image/*" onchange="handleFile('dec')" aria-label="PNG que contiene el mensaje">
+      <span class="dz-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+      </span>
+      <div class="dz-text">Elige el PNG que contiene el mensaje</div>
+    </div>
+
+    <div class="preview-area" id="dec-preview">
+      <img class="preview-thumb" id="dec-thumb" src="" alt="">
+      <div class="preview-info">
+        <div class="preview-name" id="dec-fname"></div>
+        <div class="preview-meta mono" id="dec-meta"></div>
+      </div>
+    </div>
+
+    <label for="dec-pw">Contraseña</label>
+    <input type="password" name="password" id="dec-pw" placeholder="La misma que usaste al ocultarlo">
+
+    <button type="submit" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9"></rect><path d="M7 11V9a5 5 0 0 1 9.9-1"></path></svg>
+      Revelar
+    </button>
+  </form>
+
+  <p class="form-note">
+    Si el PNG pasó por WhatsApp, Instagram o se guardó como JPG, los píxeles
+    cambiaron y el mensaje ya no está ahí. Usa siempre el archivo original.
+  </p>
+</div>
+
+{% endblock %}
