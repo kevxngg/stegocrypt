@@ -1,0 +1,698 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   StegoCrypt — hoja de estilos
+
+   DIRECCION VISUAL: cianotipo.
+   El cianotipo es el proceso de impresion fotografica mas antiguo que
+   existe, y da copias de un azul profundo. De ahi vienen los planos
+   "blueprint". Como esta herramienta esconde datos dentro de fotografias,
+   la referencia no es decorativa: es el mismo oficio.
+
+   De ahi salen las tres reglas del diseño:
+     - Lineas de un pixel, nunca sombras ni degradados. Un plano tecnico
+       se dibuja con lineas.
+     - Marcas de registro en las esquinas de cada bloque, como las cruces
+       de alineacion de una plancha de impresion.
+     - Todo dato medible (bytes, pixeles, capacidad) va en monoespaciada.
+       Si es una cifra, se alinea.
+
+   TIPOGRAFIA: IBM Plex, en peso ligero (300).
+     - Mono para titulos, etiquetas y cifras: da el registro tecnico.
+     - Sans para texto corrido: se lee sin cansar.
+   Se eligio Plex porque fue diseñada como identidad de ingenieria, no de
+   marketing, y porque su peso 300 es delgado sin volverse fragil.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+/* ── Tokens ────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme="dark"] {
+  --bg:          #05090F;
+  --surface:     #0A121D;
+  --surface-2:   #0E1929;
+  --line:        #17293D;
+  --line-bright: #24425F;
+  --text:        #DCE6F3;
+  --text-dim:    #8397B0;
+  --muted:       #5D7392;
+
+  --blue:        #4D8DF6;
+  --blue-soft:   #0F1F38;
+  --cyan:        #5FD3E4;
+  --cyan-soft:   #0C242C;
+
+  --danger:      #E5677B;
+  --danger-soft: #2A0F16;
+  --warning:     #D9A54C;
+  --warning-soft:#2A2010;
+  --success:     #57C99A;
+  --success-soft:#0B2620;
+
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --r: 2px;
+}
+
+[data-theme="light"] {
+  /* Papel de cianotipo: blanco azulado, tinta azul muy oscura. */
+  --bg:          #EDF2F8;
+  --surface:     #FFFFFF;
+  --surface-2:   #F4F8FC;
+  --line:        #C9D8E8;
+  --line-bright: #9DB6D0;
+  --text:        #0C1B2B;
+  --text-dim:    #3F5670;
+  --muted:       #66809C;
+
+  --blue:        #1F5FD0;
+  --blue-soft:   #E2EBFA;
+  --cyan:        #0E7F95;
+  --cyan-soft:   #DDF0F4;
+
+  --danger:      #B32B44;
+  --danger-soft: #FBE6EA;
+  --warning:     #8A6410;
+  --warning-soft:#FBF0DA;
+  --success:     #106E4E;
+  --success-soft:#DEF3EA;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+  /* Retícula de plano técnico, apenas perceptible. */
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: -1px -1px;
+}
+
+[data-theme="dark"] body { background-blend-mode: normal; }
+
+body::before {
+  /* Difumina la retícula hacia los bordes para que no compita con el texto. */
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, transparent 0%, var(--bg) 78%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * { position: relative; z-index: 1; }
+
+/* ── Cabecera ──────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+
+.brand-mark {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line-bright);
+  color: var(--cyan);
+}
+.brand-mark svg { width: 17px; height: 17px; stroke: currentColor; fill: none; }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-name {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+.brand-by {
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.icon-btn {
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.icon-btn:hover { border-color: var(--line-bright); color: var(--cyan); }
+.icon-btn svg { width: 16px; height: 16px; }
+[data-theme="dark"] .icon-sun  { display: none; }
+[data-theme="light"] .icon-moon { display: none; }
+
+/* ── Contenedor ────────────────────────────────────────────────────────── */
+
+.main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 44px 24px 80px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 14px;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--cyan);
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.page-title {
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: clamp(26px, 6vw, 36px);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.page-lede {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-top: 14px;
+  max-width: 52ch;
+}
+
+/* ── Bloques con marcas de registro ────────────────────────────────────── */
+
+.card,
+.menu-card,
+.compat,
+.revealed-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+/* Las cuatro cruces de alineación de una plancha de impresión. */
+.card::before, .card::after,
+.revealed-card::before, .revealed-card::after {
+  content: '';
+  position: absolute;
+  width: 7px; height: 7px;
+  border: 1px solid var(--line-bright);
+  pointer-events: none;
+}
+.card::before, .revealed-card::before {
+  top: -1px; left: -1px;
+  border-right: 0; border-bottom: 0;
+}
+.card::after, .revealed-card::after {
+  bottom: -1px; right: -1px;
+  border-left: 0; border-top: 0;
+}
+
+.card { padding: 28px 24px; margin-top: 30px; }
+
+/* ── Menú de inicio ────────────────────────────────────────────────────── */
+
+.menu-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.menu-card {
+  display: block;
+  padding: 24px 22px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .18s, background .18s, transform .18s;
+}
+.menu-card:hover {
+  border-color: var(--blue);
+  background: var(--surface-2);
+  transform: translateX(3px);
+}
+
+.card-icon {
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border: 1px solid var(--line-bright);
+  color: var(--cyan);
+  margin-bottom: 16px;
+}
+.card-icon svg { width: 15px; height: 15px; stroke: currentColor; fill: none; }
+
+.menu-card h2 {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+  margin-bottom: 5px;
+}
+.menu-card p { color: var(--text-dim); font-size: 13.5px; }
+
+/* ── Formularios ───────────────────────────────────────────────────────── */
+
+label, .field-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 24px 0 9px;
+}
+
+input[type="password"],
+input[type="text"],
+textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  padding: 12px 14px;
+  transition: border-color .15s;
+}
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: .7; }
+
+textarea { min-height: 132px; resize: vertical; line-height: 1.6; }
+
+/* ── Zona de archivo ───────────────────────────────────────────────────── */
+
+.drop-zone {
+  position: relative;
+  border: 1px dashed var(--line-bright);
+  padding: 34px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
+}
+.drop-zone:hover, .drop-zone.drag {
+  border-color: var(--cyan);
+  background: var(--cyan-soft);
+}
+.drop-zone input[type="file"] {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.dz-icon { display: block; color: var(--cyan); margin-bottom: 12px; }
+.dz-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; }
+.dz-text {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-weight: 300;
+  color: var(--text-dim);
+  letter-spacing: 0.01em;
+}
+
+.preview-area {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.preview-area.visible { display: flex; }
+.preview-thumb {
+  width: 46px; height: 46px;
+  object-fit: cover;
+  border: 1px solid var(--line-bright);
+}
+.preview-info { min-width: 0; }
+.preview-name {
+  font-size: 13px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.preview-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.mono { font-family: var(--mono); font-weight: 300; }
+
+/* ── SIGNATURE: la regla de bits ───────────────────────────────────────────
+   La capacidad no se dibuja como una barra de progreso genérica, sino como
+   una regla graduada: cada marca es una porción del plano de bits de la
+   imagen, y se encienden las que tu mensaje ocupa. Es lo que de verdad
+   está pasando dentro del archivo.                                        */
+
+.capacity-wrap { margin-top: 18px; }
+
+.bit-ruler {
+  display: flex;
+  gap: 2px;
+  height: 22px;
+  align-items: flex-end;
+}
+.bit-ruler .tick {
+  flex: 1;
+  height: 7px;
+  background: var(--line);
+  transition: height .22s ease, background .22s ease;
+}
+/* Cada quinta marca es más alta: da la lectura de escala. */
+.bit-ruler .tick:nth-child(5n + 1) { height: 12px; }
+.bit-ruler .tick.on { background: var(--cyan); height: 18px; }
+.bit-ruler .tick.on.warn   { background: var(--warning); }
+.bit-ruler .tick.on.danger { background: var(--danger); }
+
+.capacity-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--muted);
+  margin-top: 9px;
+  letter-spacing: 0.02em;
+}
+.capacity-label .over { color: var(--danger); }
+
+.field-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.field-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* ── Fuerza de la contraseña ───────────────────────────────────────────── */
+
+.pw-strength-bar {
+  height: 2px;
+  width: 0;
+  background: var(--line);
+  margin-top: 9px;
+  transition: width .25s ease, background .25s ease;
+}
+.pw-strength-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 7px;
+  min-height: 14px;
+}
+
+/* ── Botones ───────────────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  margin-top: 28px;
+  padding: 13px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--r);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .16s, border-color .16s, color .16s;
+}
+.btn svg { width: 15px; height: 15px; }
+.btn-primary {
+  background: var(--blue);
+  color: #fff;
+}
+[data-theme="light"] .btn-primary { color: #fff; }
+.btn-primary:hover { background: color-mix(in srgb, var(--blue) 82%, #fff); }
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--line-bright);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.copy-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+.copy-btn svg { width: 13px; height: 13px; }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 26px;
+  transition: color .15s;
+}
+.back-link:hover { color: var(--cyan); }
+.back-link svg { width: 13px; height: 13px; }
+
+/* ── Mensaje revelado ──────────────────────────────────────────────────── */
+
+.revealed-card {
+  padding: 26px 24px;
+  margin-bottom: 26px;
+  border-color: var(--cyan);
+  background: var(--cyan-soft);
+}
+.revealed-card h3 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 14px;
+}
+.revealed-msg {
+  font-family: var(--sans);
+  font-size: 15.5px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+}
+.revealed-note {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+/* ── Nota de formulario ────────────────────────────────────────────────── */
+
+.form-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  line-height: 1.6;
+}
+
+/* ── Compatibilidad ────────────────────────────────────────────────────── */
+
+.compat { margin-top: 30px; }
+
+.compat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  user-select: none;
+}
+.compat-header svg { width: 15px; height: 15px; transition: transform .22s; }
+.compat-header[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+.compat-body { display: none; padding: 0 20px 20px; }
+.compat-body.open { display: block; }
+
+.compat-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compat-table th {
+  text-align: left;
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.compat-table td {
+  padding: 11px 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-dim);
+  vertical-align: top;
+}
+.compat-table tr:last-child td { border-bottom: 0; }
+
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+.tag.ok   { background: var(--success-soft); color: var(--success); }
+.tag.warn { background: var(--warning-soft); color: var(--warning); }
+.tag.bad  { background: var(--danger-soft);  color: var(--danger); }
+
+.compat-note {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 16px;
+  padding-left: 13px;
+  border-left: 1px solid var(--line-bright);
+  line-height: 1.6;
+}
+
+/* ── Avisos ────────────────────────────────────────────────────────────── */
+
+.toast-area {
+  position: fixed;
+  bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  z-index: 60;
+}
+.toast {
+  border: 1px solid;
+  padding: 13px 16px;
+  font-size: 13px;
+  line-height: 1.55;
+  animation: rise .22s ease;
+}
+.toast.error   { background: var(--danger-soft);  color: var(--danger);  border-color: var(--danger); }
+.toast.success { background: var(--success-soft); color: var(--success); border-color: var(--success); }
+/* Avisos sobre la calidad de la imagen portadora: no bloquean nada, pero
+   son los que deciden si el resultado es detectable. */
+.toast.warn    { background: var(--warning-soft); color: var(--warning); border-color: var(--warning); }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Spinner ───────────────────────────────────────────────────────────── */
+
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(3px);
+  z-index: 80;
+}
+.spinner-overlay.active { display: flex; }
+.spinner {
+  width: 28px; height: 28px;
+  border: 1px solid var(--line-bright);
+  border-top-color: var(--cyan);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner-msg {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── Accesibilidad y responsive ────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .main { padding: 32px 18px 64px; }
+  .header { padding: 16px 18px; }
+  .card { padding: 22px 18px; }
+  .compat-table { font-size: 12px; }
+  .compat-table th, .compat-table td { padding: 9px 5px; }
+}
